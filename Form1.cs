@@ -177,5 +177,57 @@ namespace BaobabRidgeWildlifeRecords
         private void lblSpecies_Click(object sender, EventArgs e)
         {
         }
+        // Filters the DataGridView dynamically as text is typed into the search box
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            string searchTerm = txtSearch.Text.Trim().ToLower();
+
+            // If the search box is empty, reload all records from the file
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                LoadAnimalsToGrid();
+                return;
+            }
+
+            dataGridView1.Rows.Clear();
+
+            if (!File.Exists(filePath)) return;
+
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                foreach (var line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var parts = line.Split('|');
+                    if (parts.Length != 7) continue;
+
+                    string id = parts[0].Trim();
+                    string name = parts[1].Trim();
+                    string species = parts[2].Trim();
+                    string ageStr = parts[3].Trim();
+                    string scoreStr = parts[4].Trim();
+                    string status = parts[5].Trim();
+                    string housing = parts[6].Trim();
+
+                    // Check if the search term matches the ID, Name, or Species
+                    if (id.ToLower().Contains(searchTerm) ||
+                        name.ToLower().Contains(searchTerm) ||
+                        species.ToLower().Contains(searchTerm))
+                    {
+                        if (int.TryParse(ageStr, out int age) && int.TryParse(scoreStr, out int score))
+                        {
+                            dataGridView1.Rows.Add(id, name, species, age, score, status, housing);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error searching records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

@@ -40,6 +40,8 @@
             txtRecoveryScore = new TextBox();
             btnAdd = new Button();
             dataGridView1 = new DataGridView();
+            lblSearch = new Label();
+            txtSearch = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -149,18 +151,39 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(370, 74);
+            dataGridView1.Location = new Point(349, 78);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(396, 321);
+            dataGridView1.Size = new Size(575, 375);
             dataGridView1.TabIndex = 11;
+            // 
+            // lblSearch
+            // 
+            lblSearch.AutoSize = true;
+            lblSearch.BackColor = SystemColors.ActiveCaption;
+            lblSearch.Location = new Point(22, 473);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(48, 15);
+            lblSearch.TabIndex = 12;
+            lblSearch.Text = "Search: ";
+            // 
+            // txtSearch
+            // 
+            txtSearch.BackColor = SystemColors.ScrollBar;
+            txtSearch.Location = new Point(182, 473);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(143, 23);
+            txtSearch.TabIndex = 13;
+            txtSearch.TextChanged += txtSearch_TextChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(947, 715);
+            Controls.Add(txtSearch);
+            Controls.Add(lblSearch);
             Controls.Add(dataGridView1);
             Controls.Add(btnAdd);
             Controls.Add(txtRecoveryScore);
@@ -194,5 +217,7 @@
         private TextBox txtRecoveryScore;
         private Button btnAdd;
         private DataGridView dataGridView1;
+        private Label lblSearch;
+        private TextBox txtSearch;
     }
 }
