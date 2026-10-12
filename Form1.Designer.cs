@@ -43,6 +43,7 @@
             lblSearch = new Label();
             txtSearch = new TextBox();
             btnUpdate = new Button();
+            btnDelete = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -184,17 +185,29 @@
             btnUpdate.BackColor = Color.FromArgb(255, 192, 128);
             btnUpdate.Location = new Point(22, 464);
             btnUpdate.Name = "btnUpdate";
-            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.Size = new Size(108, 23);
             btnUpdate.TabIndex = 14;
             btnUpdate.Text = "Update Animal";
             btnUpdate.UseVisualStyleBackColor = false;
             btnUpdate.Click += btnUpdate_Click;
+            // 
+            // btnDelete
+            // 
+            btnDelete.BackColor = Color.FromArgb(255, 192, 128);
+            btnDelete.Location = new Point(23, 523);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(107, 23);
+            btnDelete.TabIndex = 15;
+            btnDelete.Text = "Delete Animal";
+            btnDelete.UseVisualStyleBackColor = false;
+            btnDelete.Click += btnDelete_Click_1;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(947, 715);
+            Controls.Add(btnDelete);
             Controls.Add(btnUpdate);
             Controls.Add(txtSearch);
             Controls.Add(lblSearch);
@@ -234,5 +247,6 @@
         private Label lblSearch;
         private TextBox txtSearch;
         private Button btnUpdate;
+        private Button btnDelete;
     }
 }

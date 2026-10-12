@@ -259,6 +259,81 @@ namespace BaobabRidgeWildlifeRecords
             {
                 MessageBox.Show($"Error: {ex.Message}", "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }// Handles deleting a selected animal record
+        private void btnDelete_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = txtAnimalID.Text.Trim().ToUpper();
+
+                // Check if a record is selected (ID box should be disabled/locked when selected)
+                if (string.IsNullOrEmpty(id) || txtAnimalID.Enabled)
+                {
+                    MessageBox.Show("Please select an animal record from the grid to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Confirm deletion with the user
+                var confirmResult = MessageBox.Show($"Are you sure you want to delete animal record {id}?",
+                                                     "Confirm Delete",
+                                                     MessageBoxButtons.YesNo,
+                                                     MessageBoxIcon.Question);
+
+                if (confirmResult == DialogResult.Yes)
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        MessageBox.Show("Record file not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    string[] lines = File.ReadAllLines(filePath);
+                    var updatedLines = new List<string>();
+                    bool found = false;
+
+                    foreach (var line in lines)
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+
+                        var parts = line.Split('|');
+                        if (parts.Length > 0 && parts[0].Trim().Equals(id, StringComparison.OrdinalIgnoreCase))
+                        {
+                            found = true; // Skip this line to delete it
+                            continue;
+                        }
+                        updatedLines.Add(line);
+                    }
+
+                    if (found)
+                    {
+                        File.WriteAllLines(filePath, updatedLines);
+                        LoadAnimalsToGrid();
+
+                        MessageBox.Show("Animal record deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Clear inputs and re-enable ID field
+                        txtAnimalID.Clear();
+                        txtName.Clear();
+                        txtSpecies.Clear();
+                        txtAge.Clear();
+                        txtRecoveryScore.Clear();
+                        txtAnimalID.Enabled = true;
+                        txtAnimalID.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Record to delete was not found in the file.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while deleting: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+           
         }
         // Loads selected grid row data into textboxes for editing
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
