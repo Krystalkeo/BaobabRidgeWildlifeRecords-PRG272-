@@ -172,6 +172,110 @@ namespace BaobabRidgeWildlifeRecords
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = txtAnimalID.Text.Trim().ToUpper();
+                string name = txtName.Text.Trim();
+                string species = txtSpecies.Text.Trim();
+                string ageText = txtAge.Text.Trim();
+                string scoreText = txtRecoveryScore.Text.Trim();
+
+                // Validate Name
+                if (string.IsNullOrEmpty(name) || name.Length > 30 || name.Contains("|"))
+                {
+                    MessageBox.Show("Validation failed: Invalid Name.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validate Species
+                if (string.IsNullOrEmpty(species) || species.Length > 30 || species.Contains("|"))
+                {
+                    MessageBox.Show("Validation failed: Invalid Species.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validate Age
+                if (!int.TryParse(ageText, out int age) || age < 0 || age > 100)
+                {
+                    MessageBox.Show("Validation failed: Invalid Age.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Validate Recovery Score
+                if (!int.TryParse(scoreText, out int score) || score < 0 || score > 100)
+                {
+                    MessageBox.Show("Validation failed: Invalid Score.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                Animal updatedAnimal = new Animal(id, name, species, age, score);
+                string updatedLine = $"{updatedAnimal.AnimalID} | {updatedAnimal.Name} | {updatedAnimal.Species} | {updatedAnimal.Age} | {updatedAnimal.RecoveryScore} | {updatedAnimal.Status} | {updatedAnimal.HousingUnit}";
+
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show("File path does not exist: " + filePath, "Debug", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                string[] lines = File.ReadAllLines(filePath);
+                bool found = false;
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (string.IsNullOrWhiteSpace(lines[i])) continue;
+
+                    var parts = lines[i].Split('|');
+                    if (parts.Length > 0 && parts[0].Trim().Equals(id, StringComparison.OrdinalIgnoreCase))
+                    {
+                        lines[i] = updatedLine;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found)
+                {
+                    File.WriteAllLines(filePath, lines);
+                    LoadAnimalsToGrid();
+
+                    MessageBox.Show("SUCCESS! Record updated in file and grid.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    txtAnimalID.Clear();
+                    txtName.Clear();
+                    txtSpecies.Clear();
+                    txtAge.Clear();
+                    txtRecoveryScore.Clear();
+                    txtAnimalID.Enabled = true;
+                    txtAnimalID.Focus();
+                }
+                else
+                {
+                    MessageBox.Show($"Record with ID '{id}' was not found in the text file lines.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        // Loads selected grid row data into textboxes for editing
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+                txtAnimalID.Text = row.Cells["AnimalID"].Value.ToString();
+                txtName.Text = row.Cells["Name"].Value.ToString();
+                txtSpecies.Text = row.Cells["Species"].Value.ToString();
+                txtAge.Text = row.Cells["Age"].Value.ToString();
+                txtRecoveryScore.Text = row.Cells["RecoveryScore"].Value.ToString();
+
+                // Lock the ID field during updates so the primary key cannot be changed
+                txtAnimalID.Enabled = false;
+            }
+        }
 
         // Dummy event handler to support designer references
         private void lblSpecies_Click(object sender, EventArgs e)
@@ -228,6 +332,9 @@ namespace BaobabRidgeWildlifeRecords
             {
                 MessageBox.Show($"Error searching records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
+
+        
     }
 }

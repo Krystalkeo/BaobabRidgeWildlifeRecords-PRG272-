@@ -42,6 +42,7 @@
             dataGridView1 = new DataGridView();
             lblSearch = new Label();
             txtSearch = new TextBox();
+            btnUpdate = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -138,9 +139,9 @@
             // btnAdd
             // 
             btnAdd.BackColor = Color.FromArgb(255, 192, 128);
-            btnAdd.Location = new Point(182, 379);
+            btnAdd.Location = new Point(22, 357);
             btnAdd.Name = "btnAdd";
-            btnAdd.Size = new Size(107, 36);
+            btnAdd.Size = new Size(87, 28);
             btnAdd.TabIndex = 10;
             btnAdd.Text = "Add Animal";
             btnAdd.UseVisualStyleBackColor = false;
@@ -157,12 +158,13 @@
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.Size = new Size(575, 375);
             dataGridView1.TabIndex = 11;
+            dataGridView1.CellClick += dataGridView1_CellClick;
             // 
             // lblSearch
             // 
             lblSearch.AutoSize = true;
             lblSearch.BackColor = SystemColors.ActiveCaption;
-            lblSearch.Location = new Point(22, 473);
+            lblSearch.Location = new Point(22, 414);
             lblSearch.Name = "lblSearch";
             lblSearch.Size = new Size(48, 15);
             lblSearch.TabIndex = 12;
@@ -171,17 +173,29 @@
             // txtSearch
             // 
             txtSearch.BackColor = SystemColors.ScrollBar;
-            txtSearch.Location = new Point(182, 473);
+            txtSearch.Location = new Point(135, 414);
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(143, 23);
             txtSearch.TabIndex = 13;
             txtSearch.TextChanged += txtSearch_TextChanged;
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.BackColor = Color.FromArgb(255, 192, 128);
+            btnUpdate.Location = new Point(22, 464);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.TabIndex = 14;
+            btnUpdate.Text = "Update Animal";
+            btnUpdate.UseVisualStyleBackColor = false;
+            btnUpdate.Click += btnUpdate_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(947, 715);
+            Controls.Add(btnUpdate);
             Controls.Add(txtSearch);
             Controls.Add(lblSearch);
             Controls.Add(dataGridView1);
@@ -219,5 +233,6 @@
         private DataGridView dataGridView1;
         private Label lblSearch;
         private TextBox txtSearch;
+        private Button btnUpdate;
     }
 }
