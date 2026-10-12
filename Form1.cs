@@ -1,10 +1,181 @@
+using System;
+using System.IO;
+using System.Windows.Forms;
+
 namespace BaobabRidgeWildlifeRecords
 {
     public partial class Form1 : Form
     {
+        // Path to animals.txt stored next to the application executable
+        private readonly string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "animals.txt");
+
         public Form1()
         {
             InitializeComponent();
+
+            // Set up grid columns when form opens
+            InitializeGridColumns();
+
+            // Load existing animals into the grid on startup
+            LoadAnimalsToGrid();
+        }
+
+        // Configures the table headers for the grid
+        private void InitializeGridColumns()
+        {
+            dataGridView1.Columns.Clear();
+            dataGridView1.Columns.Add("AnimalID", "Animal ID");
+            dataGridView1.Columns.Add("Name", "Name");
+            dataGridView1.Columns.Add("Species", "Species");
+            dataGridView1.Columns.Add("Age", "Age");
+            dataGridView1.Columns.Add("RecoveryScore", "Recovery Score");
+            dataGridView1.Columns.Add("Status", "Status");
+            dataGridView1.Columns.Add("HousingUnit", "Housing Unit");
+
+            dataGridView1.ReadOnly = true;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        }
+
+        // Loads records from animals.txt into the grid
+        private void LoadAnimalsToGrid()
+        {
+            dataGridView1.Rows.Clear();
+
+            if (!File.Exists(filePath))
+            {
+                File.Create(filePath).Close();
+                return;
+            }
+
+            try
+            {
+                string[] lines = File.ReadAllLines(filePath);
+
+                foreach (var line in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var parts = line.Split('|');
+                    if (parts.Length != 7) continue;
+
+                    string id = parts[0].Trim();
+                    string name = parts[1].Trim();
+                    string species = parts[2].Trim();
+                    string ageStr = parts[3].Trim();
+                    string scoreStr = parts[4].Trim();
+                    string status = parts[5].Trim();
+                    string housing = parts[6].Trim();
+
+                    if (int.TryParse(ageStr, out int age) &&
+                        int.TryParse(scoreStr, out int score) &&
+                        System.Text.RegularExpressions.Regex.IsMatch(id, @"^WR-\d{4}$"))
+                    {
+                        dataGridView1.Rows.Add(id, name, species, age, score, status, housing);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Handles adding a new animal when the Add button is clicked
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = txtAnimalID.Text.Trim().ToUpper();
+                string name = txtName.Text.Trim();
+                string species = txtSpecies.Text.Trim();
+                string ageText = txtAge.Text.Trim();
+                string scoreText = txtRecoveryScore.Text.Trim();
+
+                // Validate Animal ID format
+                if (string.IsNullOrEmpty(id) || !System.Text.RegularExpressions.Regex.IsMatch(id, @"^WR-\d{4}$"))
+                {
+                    MessageBox.Show("Animal ID must start with WR- followed by 4 digits (e.g., WR-0001).", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtAnimalID.Focus();
+                    return;
+                }
+
+                // Check for duplicate ID
+                if (File.Exists(filePath))
+                {
+                    foreach (var line in File.ReadAllLines(filePath))
+                    {
+                        var parts = line.Split('|');
+                        if (parts.Length > 0 && parts[0].Trim().Equals(id, StringComparison.OrdinalIgnoreCase))
+                        {
+                            MessageBox.Show("This Animal ID already exists. IDs must be unique.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            txtAnimalID.Focus();
+                            return;
+                        }
+                    }
+                }
+
+                // Validate Name
+                if (string.IsNullOrEmpty(name) || name.Length > 30 || name.Contains("|"))
+                {
+                    MessageBox.Show("Name is required (1-30 characters) and cannot contain the pipe (|) character.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtName.Focus();
+                    return;
+                }
+
+                // Validate Species
+                if (string.IsNullOrEmpty(species) || species.Length > 30 || species.Contains("|"))
+                {
+                    MessageBox.Show("Species is required (1-30 characters) and cannot contain the pipe (|) character.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtSpecies.Focus();
+                    return;
+                }
+
+                // Validate Age
+                if (!int.TryParse(ageText, out int age) || age < 0 || age > 100)
+                {
+                    MessageBox.Show("Age must be a whole number between 0 and 100.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtAge.Focus();
+                    return;
+                }
+
+                // Validate Recovery Score
+                if (!int.TryParse(scoreText, out int score) || score < 0 || score > 100)
+                {
+                    MessageBox.Show("Recovery Score must be a whole number between 0 and 100.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    txtRecoveryScore.Focus();
+                    return;
+                }
+
+                // Create Animal object (calculates status and housing automatically)
+                Animal newAnimal = new Animal(id, name, species, age, score);
+
+                // Format record line
+                string recordLine = $"{newAnimal.AnimalID} | {newAnimal.Name} | {newAnimal.Species} | {newAnimal.Age} | {newAnimal.RecoveryScore} | {newAnimal.Status} | {newAnimal.HousingUnit}";
+
+                // Save to file
+                File.AppendAllLines(filePath, new[] { recordLine });
+
+                // Refresh grid and clear inputs
+                LoadAnimalsToGrid();
+
+                MessageBox.Show($"Animal added successfully!\nStatus: {newAnimal.Status}\nHousing Unit: {newAnimal.HousingUnit}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                txtAnimalID.Clear();
+                txtName.Clear();
+                txtSpecies.Clear();
+                txtAge.Clear();
+                txtRecoveryScore.Clear();
+                txtAnimalID.Focus();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // Dummy event handler to support designer references
+        private void lblSpecies_Click(object sender, EventArgs e)
+        {
         }
     }
 }
