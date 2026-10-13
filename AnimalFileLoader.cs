@@ -5,10 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace BaobabRidgeWildlifeRecords
 {
-    /// <summary>
-    /// A single record read from animals.txt. Unlike <see cref="Animal"/>, this type
+     
     /// keeps the Status and Housing Unit exactly as stored in the file.
-    /// </summary>
+    
     public class AnimalRecord
     {
         public string AnimalID { get; }
@@ -32,25 +31,16 @@ namespace BaobabRidgeWildlifeRecords
         }
     }
 
-    /// <summary>
-    /// Reads animal records from the pipe-separated animals.txt file.
-    /// This class is kept separate from the form so the loading and validation
-    /// rules can be tested independently of the user interface.
-    /// </summary>
+    
     public static class AnimalFileLoader
     {
-        /// <summary>A valid Animal ID is "WR-" followed by exactly four digits (for example WR-0001).</summary>
+        ///A valid Animal ID is "WR-" followed by exactly four digits (for example WR-0001)
         public static readonly Regex IdPattern = new Regex(@"^WR-\d{4}$");
 
-        /// <summary>
+        
         /// Attempts to parse a single line from animals.txt.
         /// Returns false when the line is malformed: it does not have seven
-        /// pipe-separated fields, the Animal ID is invalid, or the Age and
-        /// Recovery Score are not whole numbers.
-        /// </summary>
-        /// <param name="line">The raw line to parse.</param>
-        /// <param name="record">The parsed record, or null when the line is invalid.</param>
-        /// <returns>True when the line is a valid record; otherwise false.</returns>
+        
         public static bool TryParseLine(string line, out AnimalRecord? record)
         {
             record = null;
@@ -78,17 +68,11 @@ namespace BaobabRidgeWildlifeRecords
             return true;
         }
 
-        /// <summary>
+
         /// Loads every valid record from the given file, preserving the order in
         /// which the records appear in the file. When the file does not exist an
         /// empty file is created and an empty list is returned (no error).
-        /// Malformed lines are skipped; the number skipped is reported through
-        /// <paramref name="skippedCount"/>.
-        /// </summary>
-        /// <param name="filePath">Full path to the animals.txt file.</param>
-        /// <param name="skippedCount">Receives the number of malformed lines that were skipped.</param>
-        /// <returns>The valid records, in file order.</returns>
-        /// <exception cref="IOException">Thrown when the file cannot be read or created.</exception>
+        /// Malformed lines are skipped; the number skipped is reported through  <paramref name="skippedCount"/>
         public static List<AnimalRecord> Load(string filePath, out int skippedCount)
         {
             skippedCount = 0;
