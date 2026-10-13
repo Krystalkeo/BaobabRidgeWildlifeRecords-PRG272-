@@ -12,6 +12,9 @@ Release/
 # Generated files
 summary.txt
 
-3Operating system files
+# Operating system files
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log

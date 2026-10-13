@@ -36,47 +36,44 @@ namespace BaobabRidgeWildlifeRecords
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
-        // Loads records from animals.txt into the grid
+        /// <summary>
+        /// Loads every valid record from animals.txt into the grid, in the same order
+        /// they appear in the file. This method is also the single refresh entry point:
+        /// it clears the grid first, so it can be called after Add, Update and Delete
+        /// without producing duplicate rows. Malformed lines are skipped and reported
+        /// once to the user. If the file does not exist, an empty file is created and
+        /// an empty grid is shown without an error.
+        /// </summary>
         private void LoadAnimalsToGrid()
         {
+            // Clear existing rows first so repeated calls (Add/Update/Delete) never duplicate data.
             dataGridView1.Rows.Clear();
-
-            if (!File.Exists(filePath))
-            {
-                File.Create(filePath).Close();
-                return;
-            }
 
             try
             {
-                string[] lines = File.ReadAllLines(filePath);
+                // AnimalFileLoader creates the file when it is missing and returns
+                // the valid records in file order, together with a count of skipped lines.
+                var records = AnimalFileLoader.Load(filePath, out int skippedCount);
 
-                foreach (var line in lines)
+                foreach (var record in records)
                 {
-                    if (string.IsNullOrWhiteSpace(line)) continue;
+                    dataGridView1.Rows.Add(record.AnimalID, record.Name, record.Species,
+                        record.Age, record.RecoveryScore, record.Status, record.HousingUnit);
+                }
 
-                    var parts = line.Split('|');
-                    if (parts.Length != 7) continue;
-
-                    string id = parts[0].Trim();
-                    string name = parts[1].Trim();
-                    string species = parts[2].Trim();
-                    string ageStr = parts[3].Trim();
-                    string scoreStr = parts[4].Trim();
-                    string status = parts[5].Trim();
-                    string housing = parts[6].Trim();
-
-                    if (int.TryParse(ageStr, out int age) &&
-                        int.TryParse(scoreStr, out int score) &&
-                        System.Text.RegularExpressions.Regex.IsMatch(id, @"^WR-\d{4}$"))
-                    {
-                        dataGridView1.Rows.Add(id, name, species, age, score, status, housing);
-                    }
+                // Tell the user once how many malformed lines were ignored.
+                if (skippedCount > 0)
+                {
+                    MessageBox.Show(
+                        $"{skippedCount} malformed line(s) were skipped while loading animals.txt.",
+                        "Records Skipped", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading records: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Handles file-loading errors such as locked files or access-denied problems.
+                MessageBox.Show($"Error loading records: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
