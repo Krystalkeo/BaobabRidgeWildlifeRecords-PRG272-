@@ -46,7 +46,7 @@ supports the project's target framework (the project currently targets `.NET 10`
 Each line represents one animal and contains exactly seven pipe-separated fields:
 
 ```
-WR-0001 | Thandi | African Elephant | 12 | 85 | Release-Ready | Pre-Release Camp
+WR-0001 | Katty | African Elephant | 12 | 85 | Release-Ready | Pre-Release Camp
 ```
 
 Field order: `Animal ID | Name | Species | Age | Recovery Score | Status | Housing Unit`.
