@@ -36,14 +36,7 @@ namespace BaobabRidgeWildlifeRecords
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
-        /// <summary>
-        /// Loads every valid record from animals.txt into the grid, in the same order
-        /// they appear in the file. This method is also the single refresh entry point:
-        /// it clears the grid first, so it can be called after Add, Update and Delete
-        /// without producing duplicate rows. Malformed lines are skipped and reported
-        /// once to the user. If the file does not exist, an empty file is created and
-        /// an empty grid is shown without an error.
-        /// </summary>
+     
         private void LoadAnimalsToGrid()
         {
             // Clear existing rows first so repeated calls (Add/Update/Delete) never duplicate data.
