@@ -1,22 +1,12 @@
-<<<<<<< Updated upstream
+WR-0001 | Zukie | African Elephant | 12 | 85 | Release-Ready | Pre-Release Camp
 WR-0001 | Thandi | Lion | 12 | 85 | Release Ready | Pre Release Camp
 WR-0002 | Kofi | Vervet Monkey | 4 | 55 | Stable | Recovery Ward
-WR-0003 | Zola | Leopard Tortoise | 7 | 30 | Serious | High Dependency Ward
-WR-0004 | Nia | Rhinoceros | 3 | 12 | Critical | Intensive Care Unit
-WR-0005 | Jabu | Buffalo | 9 | 70 | Recovering | Outdoor Enclosure
-WR-0006 | Amara | Cheetah | 5 | 45 | Stable | Recovery Ward
-WR-0007 | Sipho | Nile Crocodile | 15 | 90 | Release Ready | Pre Release Camp
-WR-0008 | Lindiwe | White Rhinoceros | 11 | 22 | Serious | High Dependency Ward
-
-=======
-WR-0001 | Katty | African Elephant | 12 | 85 | Release-Ready | Pre-Release Camp
-WR-0002 | Kofi | Vervet Monkey | 4 | 55 | Stable | Recovery Ward
-WR-0003 | Zuks | Leopard Tortoise | 7 | 30 | Serious | High-Dependency Ward
+WR-0003 | Zeheel | Leopard Tortoise | 7 | 30 | Serious | High-Dependency Ward
 WR-0004 | Nia | Southern Ground Hornbill | 3 | 12 | Critical | Intensive Care Unit
-WR-0005 | Oluh | Cape Buffalo | 9 | 70 | Recovering | Outdoor Enclosure
+WR-0005 | Kholie | Cape Buffalo | 9 | 70 | Recovering | Outdoor Enclosure
 WR-0006 | Amara | Cheetah | 5 | 45 | Stable | Recovery Ward
-WR-0007 | Zayree | Nile Crocodile | 15 | 90 | Release-Ready | Pre-Release Camp
-WR-0008 | Phineas | White Rhinoceros | 11 | 22 | Serious | High-Dependency Ward
-WR-0009 | Trusty | African Wild Dog | 2 | 65 | Recovering | Outdoor Enclosure
-WR-0010 | Long Tom | Giraffe | 6 | 8 | Critical | Intensive Care Unit
->>>>>>> Stashed changes
+WR-0007 | Thuks | Nile Crocodile | 15 | 90 | Release-Ready | Pre-Release Camp
+WR-0008 | Lee | White Rhinoceros | 11 | 22 | Serious | High-Dependency Ward
+WR-0009 | Alds | African Wild Dog | 2 | 65 | Recovering | Outdoor Enclosure
+WR-0010 | Alex | Giraffe | 6 | 8 | Critical | Intensive Care Unit
+

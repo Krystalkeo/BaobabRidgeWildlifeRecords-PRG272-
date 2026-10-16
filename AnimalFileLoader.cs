@@ -4,10 +4,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 namespace BaobabRidgeWildlifeRecords
-{
-     
+{ 
     /// keeps the Status and Housing Unit exactly as stored in the file.
-    
+   
     public class AnimalRecord
     {
         public string AnimalID { get; set; }
@@ -31,16 +30,18 @@ namespace BaobabRidgeWildlifeRecords
         }
     }
 
+    /// Reads animal records from the pipe-separated animals.txt file.
+    /// This class is kept separate from the form so the loading and validation
     
     public static class AnimalFileLoader
     {
-        ///A valid Animal ID is "WR-" followed by exactly four digits (for example WR-0001)
+        /// A valid Animal ID is "WR-" followed by exactly four digits (for example WR-6378).
         public static readonly Regex IdPattern = new Regex(@"^WR-\d{4}$");
 
         
         /// Attempts to parse a single line from animals.txt.
-        /// Returns false when the line is malformed: it does not have seven
-        
+        /// Returns false when the line is malformed: it does not have seven pipe-separated fields, the Animal ID is invalid, or the Age and
+      
         public static bool TryParseLine(string line, out AnimalRecord? record)
         {
             record = null;
@@ -68,11 +69,10 @@ namespace BaobabRidgeWildlifeRecords
             return true;
         }
 
-
-        /// Loads every valid record from the given file, preserving the order in
-        /// which the records appear in the file. When the file does not exist an
-        /// empty file is created and an empty list is returned (no error).
-        /// Malformed lines are skipped; the number skipped is reported through  <paramref name="skippedCount"/>
+        
+        /// Loads every valid record from the given file, preserving the order in,
+        /// which the records appear in the file. When the file does not exist an empty file is created and an empty list is returned (no error).
+     
         public static List<AnimalRecord> Load(string filePath, out int skippedCount)
         {
             skippedCount = 0;
