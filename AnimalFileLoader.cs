@@ -9,13 +9,13 @@ namespace BaobabRidgeWildlifeRecords
    
     public class AnimalRecord
     {
-        public string AnimalID { get; }
-        public string Name { get; }
-        public string Species { get; }
-        public int Age { get; }
-        public int RecoveryScore { get; }
-        public string Status { get; }
-        public string HousingUnit { get; }
+        public string AnimalID { get; set; }
+        public string Name { get; set; }
+        public string Species { get; set; }
+        public int Age { get; set; }
+        public int RecoveryScore { get; set; }
+        public string Status { get; set; }
+        public string HousingUnit { get; set; }
 
         public AnimalRecord(string id, string name, string species, int age,
             int score, string status, string housingUnit)

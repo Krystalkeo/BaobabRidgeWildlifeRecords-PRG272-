@@ -1,4 +1,5 @@
 WR-0001 | Zukie | African Elephant | 12 | 85 | Release-Ready | Pre-Release Camp
+WR-0001 | Thandi | Lion | 12 | 85 | Release Ready | Pre Release Camp
 WR-0002 | Kofi | Vervet Monkey | 4 | 55 | Stable | Recovery Ward
 WR-0003 | Zeheel | Leopard Tortoise | 7 | 30 | Serious | High-Dependency Ward
 WR-0004 | Nia | Southern Ground Hornbill | 3 | 12 | Critical | Intensive Care Unit
@@ -8,3 +9,4 @@ WR-0007 | Thuks | Nile Crocodile | 15 | 90 | Release-Ready | Pre-Release Camp
 WR-0008 | Lee | White Rhinoceros | 11 | 22 | Serious | High-Dependency Ward
 WR-0009 | Alds | African Wild Dog | 2 | 65 | Recovering | Outdoor Enclosure
 WR-0010 | Alex | Giraffe | 6 | 8 | Critical | Intensive Care Unit
+
