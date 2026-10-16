@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/BusinessLayer/" />
+  <Folder Name="/DataLayer/" />
+  <Folder Name="/PresentationLayer/" />
   <Project Path="BaobabRidgeWildlifeRecords.csproj" />
 </Solution>
