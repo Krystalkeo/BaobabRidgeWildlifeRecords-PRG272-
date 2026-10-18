@@ -202,7 +202,7 @@ namespace BaobabRidgeWildlifeRecords
         }
 
         //Save changes to selected animals with validate inputs
-        //Rewrites animal.txt   
+        //Rewrites animal.txt       
         private void btnUpdate_Click(object sender, EventArgs e)
         {
                 
