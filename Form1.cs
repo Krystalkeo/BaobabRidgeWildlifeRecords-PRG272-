@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,7 +14,7 @@ namespace BaobabRidgeWildlifeRecords
         public Form1()
         {
             InitializeComponent();
-
+            SetEditMode(false);
             // Set up grid columns when form opens
             InitializeGridColumns();
 
@@ -36,8 +38,8 @@ namespace BaobabRidgeWildlifeRecords
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
-      
-     
+
+
         private void LoadAnimalsToGrid()
         {
             // Clear existing rows first so repeated calls (Add/Update/Delete) never duplicate data.
@@ -163,44 +165,54 @@ namespace BaobabRidgeWildlifeRecords
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        //Validate Name Species age and Score
+        private bool ValidateFields(out string name, out string species, out int age, out int score)
+        {
+            name = txtName.Text.Trim();
+            species = txtSpecies.Text.Trim();
+            age = 0;
+            score = 0;
+
+            if (name.Length == 0 || name.Length > 30 || name.Contains("|"))
+            {
+                MessageBox.Show("Name is required (1-30 characters) and cannot contain the pipe (|) character.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtName.Focus();
+                return false;
+            }
+            if (species.Length == 0 || species.Length > 30 || species.Contains("|"))
+            {
+                MessageBox.Show("Species is required (1-30 characters) and cannot contain the pipe (|) character.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtSpecies.Focus();
+                return false;
+            }
+            if (!int.TryParse(txtAge.Text.Trim(), out age) || age < 0  || age > 100)
+            {
+                MessageBox.Show("Age must be a whole number between 0 and 100.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtAge.Focus();
+                return false;
+            }
+            if (!int.TryParse(txtRecoveryScore.Text.Trim(), out score) || score < 0 || score > 100)
+            {
+                MessageBox.Show("Recovery Score must be a whole number between 0 and 100.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtRecoveryScore.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        //Save changes to selected animals with validate inputs
+        //Rewrites animal.txt   
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            try
-            {
+                
+            if (!editMode) return;
+
+            try {
+                if (!ValidateFields(out string name, out string species, out int age, out int score))
+                { return; }
+
                 string id = txtAnimalID.Text.Trim().ToUpper();
-                string name = txtName.Text.Trim();
-                string species = txtSpecies.Text.Trim();
-                string ageText = txtAge.Text.Trim();
-                string scoreText = txtRecoveryScore.Text.Trim();
-
-                // Validate Name
-                if (string.IsNullOrEmpty(name) || name.Length > 30 || name.Contains("|"))
-                {
-                    MessageBox.Show("Validation failed: Invalid Name.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Validate Species
-                if (string.IsNullOrEmpty(species) || species.Length > 30 || species.Contains("|"))
-                {
-                    MessageBox.Show("Validation failed: Invalid Species.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Validate Age
-                if (!int.TryParse(ageText, out int age) || age < 0 || age > 100)
-                {
-                    MessageBox.Show("Validation failed: Invalid Age.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                // Validate Recovery Score
-                if (!int.TryParse(scoreText, out int score) || score < 0 || score > 100)
-                {
-                    MessageBox.Show("Validation failed: Invalid Score.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
                 Animal updatedAnimal = new Animal(id, name, species, age, score);
                 string updatedLine = $"{updatedAnimal.AnimalID} | {updatedAnimal.Name} | {updatedAnimal.Species} | {updatedAnimal.Age} | {updatedAnimal.RecoveryScore} | {updatedAnimal.Status} | {updatedAnimal.HousingUnit}";
 
@@ -239,18 +251,23 @@ namespace BaobabRidgeWildlifeRecords
                     txtAge.Clear();
                     txtRecoveryScore.Clear();
                     txtAnimalID.Enabled = true;
+                    SetEditMode(false);
                     txtAnimalID.Focus();
                 }
                 else
                 {
                     MessageBox.Show($"Record with ID '{id}' was not found in the text file lines.", "Debug", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error: {ex.Message}", "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }// Handles deleting a selected animal record
+        }
+        
+        // Handles deleting a selected animal record
         private void btnDelete_Click_1(object sender, EventArgs e)
         {
             try
@@ -258,7 +275,7 @@ namespace BaobabRidgeWildlifeRecords
                 string id = txtAnimalID.Text.Trim().ToUpper();
 
                 // Check if a record is selected (ID box should be disabled/locked when selected)
-                if (string.IsNullOrEmpty(id) || txtAnimalID.Enabled)
+                if (string.IsNullOrEmpty(id) || !editMode)
                 {
                     MessageBox.Show("Please select an animal record from the grid to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -310,6 +327,7 @@ namespace BaobabRidgeWildlifeRecords
                         txtRecoveryScore.Clear();
                         txtAnimalID.Enabled = true;
                         txtAnimalID.Focus();
+                        SetEditMode(false);
                     }
                     else
                     {
@@ -324,7 +342,7 @@ namespace BaobabRidgeWildlifeRecords
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
-           
+
         }
         // Loads selected grid row data into textboxes for editing
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -338,8 +356,8 @@ namespace BaobabRidgeWildlifeRecords
                 txtAge.Text = row.Cells["Age"].Value.ToString();
                 txtRecoveryScore.Text = row.Cells["RecoveryScore"].Value.ToString();
 
-                // Lock the ID field during updates so the primary key cannot be changed
-                txtAnimalID.Enabled = false;
+                //Switch to EditMode when Selecting Cell
+                SetEditMode(true);
             }
         }
 
@@ -350,6 +368,9 @@ namespace BaobabRidgeWildlifeRecords
         // Filters the DataGridView dynamically as text is typed into the search box
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
+            //Prevent conflict for Search button
+            if (supressFilter)
+            {  return; }
             string searchTerm = txtSearch.Text.Trim().ToLower();
 
             // If the search box is empty, reload all records from the file
@@ -400,7 +421,96 @@ namespace BaobabRidgeWildlifeRecords
             }
 
         }
+      
+        private void lblSearch_Click(object sender, EventArgs e)
+        {
+
+        }
+        private bool editMode = false;
+
+        //switches form from add mode to edit mode
+        private void SetEditMode(bool isEditing)
+        { 
+            editMode = isEditing;
+            txtAnimalID.ReadOnly = editMode;
+            btnAdd.Enabled = !isEditing;
+            btnUpdate.Enabled = isEditing;
+            //set btnUpdate.Text acts as save changes
+
+        }
+        // Loads one animal's values into the input boxes and switches to Edit mode.
+        private void LoadIntoForm(string id, string name, string species, string age, string score)
+        {
+            txtAnimalID.Text = id;
+            txtName.Text = name;
+            txtSpecies.Text = species;
+            txtAge.Text = age;
+            txtRecoveryScore.Text = score;
+            SetEditMode(true);
+        }
+
+        private bool supressFilter = false;
+
+        //
+        
+
+        //Clear input boxes
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            txtAnimalID.Clear();
+            txtAge.Clear();
+            txtName.Clear();
+            txtRecoveryScore.Clear();
+            txtSpecies.Clear();
+            
+
+            supressFilter = true;
+            txtSearch.Clear();
+            supressFilter = false;
+
+            SetEditMode(false);        // back to Add mode
+            LoadAnimalsToGrid();       // show all records again
+            txtAnimalID.Focus();
+        }
 
         
+
+        //find animal (case insensitive) by ID for editing
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string id = txtSearch.Text.Trim();
+            //prevents empty search
+            if (string.IsNullOrEmpty(id)) 
+            {
+                MessageBox.Show("Please Enter ID to search");
+                return;
+            }
+
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    MessageBox.Show("File not found");
+                    return;
+                }
+
+                foreach (var line in File.ReadAllLines(filePath))
+                {
+                    var p = line.Split('|');
+                    if (p.Length == 7 && p[0].Trim().Equals(id, StringComparison.OrdinalIgnoreCase))
+                    {
+                        LoadIntoForm(p[0].Trim(), p[1].Trim(), p[2].Trim(), p[3].Trim(), p[4].Trim());
+                        return;
+                    }
+                }
+
+                MessageBox.Show($"No animal found with ID {id} Not Found");
+                }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
     }
 }
