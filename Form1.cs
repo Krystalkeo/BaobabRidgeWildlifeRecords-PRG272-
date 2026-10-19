@@ -36,6 +36,7 @@ namespace BaobabRidgeWildlifeRecords
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
+      
      
         private void LoadAnimalsToGrid()
         {

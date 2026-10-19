@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 0001 | Thandi | Lion | 12 | 85 | Release Ready | Pre Release Camp
 0002 | Kofi | Vervet Monkey | 4 | 55 | Stable | Recovery Ward
 0003 | Zola | Leopard Tortoise | 7 | 30 | Serious | High Dependency Ward
