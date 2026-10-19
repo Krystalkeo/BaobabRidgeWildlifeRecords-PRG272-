@@ -34,10 +34,6 @@ namespace BaobabRidgeWildlifeRecords
     
     public static class AnimalFileLoader
     {
-        ///A valid Animal ID is "WR-" followed by exactly four digits (for example WR-0001)
-        public static readonly Regex IdPattern = new Regex(@"^WR-\d{4}$");
-
-        
         /// Attempts to parse a single line from animals.txt.
         /// Returns false when the line is malformed: it does not have seven
         
@@ -59,8 +55,8 @@ namespace BaobabRidgeWildlifeRecords
             string status = parts[5].Trim();
             string housingUnit = parts[6].Trim();
 
-            // The ID must match the WR-#### pattern and Age/Score must be whole numbers.
-            if (!IdPattern.IsMatch(id)) return false;
+            // The Age/Score must be whole numbers.
+ 
             if (!int.TryParse(ageText, out int age)) return false;
             if (!int.TryParse(scoreText, out int score)) return false;
 
