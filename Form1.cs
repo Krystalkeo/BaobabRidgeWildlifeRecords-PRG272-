@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -36,8 +37,8 @@ namespace BaobabRidgeWildlifeRecords
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
 
-      
-     
+
+
         private void LoadAnimalsToGrid()
         {
             // Clear existing rows first so repeated calls (Add/Update/Delete) never duplicate data.
@@ -289,7 +290,7 @@ namespace BaobabRidgeWildlifeRecords
                         var parts = line.Split('|');
                         if (parts.Length > 0 && parts[0].Trim().Equals(id, StringComparison.OrdinalIgnoreCase))
                         {
-                            found = true; // Skip this line to delete it
+                            found = true; 
                             continue;
                         }
                         updatedLines.Add(line);
@@ -302,7 +303,7 @@ namespace BaobabRidgeWildlifeRecords
 
                         MessageBox.Show("Animal record deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // Clear inputs and re-enable ID field
+                        // Clear inputs 
                         txtAnimalID.Clear();
                         txtName.Clear();
                         txtSpecies.Clear();
@@ -321,11 +322,11 @@ namespace BaobabRidgeWildlifeRecords
             {
                 MessageBox.Show($"An error occurred while deleting: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }//////End of delete button click 
+        // Loads selected grid row data into textboxes for editing
         private void btnDelete_Click(object sender, EventArgs e)
         {
-           
-        }
+        }//////End of delete button click 
         // Loads selected grid row data into textboxes for editing
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -343,7 +344,7 @@ namespace BaobabRidgeWildlifeRecords
             }
         }
 
-        // Dummy event handler to support designer references
+        // Dummy event handler to support designer references 
         private void lblSpecies_Click(object sender, EventArgs e)
         {
         }
@@ -401,6 +402,121 @@ namespace BaobabRidgeWildlifeRecords
 
         }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filePath = "animals.txt";
+                List<string> lines = new List<string>();
+
+                if (File.Exists(filePath))
+                {
+                    // Read all lines into a List; File.
+                    lines = File.ReadAllLines(filePath).ToList();
+                }
+
+                int totalAnimals = 0;
+                double totalAge = 0;
+                double totalScore = 0;
+
+                // Use OrdinalIgnoreCase so status lookups are case-insensitive (e.g. "stable" and "Stable" both count)
+                Dictionary<string, int> statusCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+                    {
+                        { "Critical", 0 },
+                        { "Serious", 0 },
+                        { "Stable", 0 },
+                        { "Recovering", 0 },
+                        { "Release-Ready", 0 }
+                    };
+
+                foreach (string line in lines)
+                {
+                    // Split the line using the pipe character '|' as a custom delimiter separating each data field
+                    string[] parts = line.Split('|');
+                    // Expected format: ID | Name | Species | Age | Score | Status | Housing Unit
+                    if (parts.Length >= 7)
+                    {
+                        // Use TryParse to safely validate numbers and prevent crashes 
+                        if (int.TryParse(parts[3], out int age) && int.TryParse(parts[4], out int score))
+                        {
+                            totalAnimals++;
+                            totalAge += age;
+                            totalScore += score;
+
+                            string status = parts[5].Trim();
+                            if (statusCounts.ContainsKey(status))
+                            {
+                                statusCounts[status]++;
+                            }
+                        }
+                    }
+                }
+
+                // Calculate averages using InvariantCulture to ensure full stop decimal separator
+                string avgAgeStr = totalAnimals > 0 ? (totalAge / totalAnimals).ToString("0.00", CultureInfo.InvariantCulture) : "N/A";
+                string avgScoreStr = totalAnimals > 0 ? (totalScore / totalAnimals).ToString("0.00", CultureInfo.InvariantCulture) : "N/A";
+
+                // Display results on some labels
+                lblTotalAnimals.Text = $"Total Animals: {totalAnimals}";
+                lblAvgAge.Text = $"Average Age: {avgAgeStr}";
+                lblAvgScore.Text = $"Average Recovery Score: {avgScoreStr}";
+
+                lblCriticalCount.Text = $"Critical: {statusCounts["Critical"]}";
+                lblSeriousCount.Text = $"Serious: {statusCounts["Serious"]}";
+                lblStableCount.Text = $"Stable: {statusCounts["Stable"]}";
+                lblRecoveringCount.Text = $"Recovering: {statusCounts["Recovering"]}";
+                lblReleaseReadyCount.Text = $"Release-Ready: {statusCounts["Release-Ready"]}";
+
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                List<string> summaryLines = new List<string>
+                        {
+                        "BAOBAB RIDGE WILDLIFE REHABILITATION CENTRE",
+                        "ANIMAL SUMMARY REPORT",
+                        $"Generated: {timestamp}",
+                        "----------------------------------------",
+                        $"Total animals:            {totalAnimals}",
+                        $"Average age (years):      {avgAgeStr}",
+                        $"Average recovery score:   {avgScoreStr}",
+                        "----------------------------------------",
+                        "Animals per status:",
+                        $" Critical:               {statusCounts["Critical"]}",
+                        $" Serious:                {statusCounts["Serious"]}",
+                        $" Stable:                 {statusCounts["Stable"]}",
+                        $" Recovering:             {statusCounts["Recovering"]}",
+                        $" Release-Ready:          {statusCounts["Release-Ready"]}"
+                        };
+
+                // Overwrite summary.txt
+                File.WriteAllLines("summary.txt", summaryLines);
+
+                MessageBox.Show("Summary report generated and saved successfully to summary.txt.",
+                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("Access denied while writing summary.txt.",
+                    "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Could not write summary.txt because it is in use by another program.",
+                    "File In Use", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while generating the summary: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblSearch_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

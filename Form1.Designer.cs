@@ -44,6 +44,15 @@
             txtSearch = new TextBox();
             btnUpdate = new Button();
             btnDelete = new Button();
+            btnGeneratesum = new Button();
+            lblTotalAnimals = new Label();
+            lblAvgAge = new Label();
+            lblAvgScore = new Label();
+            lblCriticalCount = new Label();
+            lblSeriousCount = new Label();
+            lblStableCount = new Label();
+            lblReleaseReadyCount = new Label();
+            lblRecoveringCount = new Label();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
@@ -170,6 +179,7 @@
             lblSearch.Size = new Size(48, 15);
             lblSearch.TabIndex = 12;
             lblSearch.Text = "Search: ";
+            lblSearch.Click += lblSearch_Click;
             // 
             // txtSearch
             // 
@@ -202,11 +212,94 @@
             btnDelete.UseVisualStyleBackColor = false;
             btnDelete.Click += btnDelete_Click_1;
             // 
+            // btnGeneratesum
+            // 
+            btnGeneratesum.Location = new Point(169, 464);
+            btnGeneratesum.Name = "btnGeneratesum";
+            btnGeneratesum.Size = new Size(120, 34);
+            btnGeneratesum.TabIndex = 16;
+            btnGeneratesum.Text = "Generate Summary";
+            btnGeneratesum.UseVisualStyleBackColor = true;
+            btnGeneratesum.Click += button1_Click;
+            // 
+            // lblTotalAnimals
+            // 
+            lblTotalAnimals.AutoSize = true;
+            lblTotalAnimals.Location = new Point(214, 523);
+            lblTotalAnimals.Name = "lblTotalAnimals";
+            lblTotalAnimals.Size = new Size(0, 15);
+            lblTotalAnimals.TabIndex = 17;
+            // 
+            // lblAvgAge
+            // 
+            lblAvgAge.AutoSize = true;
+            lblAvgAge.Location = new Point(214, 587);
+            lblAvgAge.Name = "lblAvgAge";
+            lblAvgAge.Size = new Size(0, 15);
+            lblAvgAge.TabIndex = 18;
+            // 
+            // lblAvgScore
+            // 
+            lblAvgScore.AutoSize = true;
+            lblAvgScore.Location = new Point(405, 523);
+            lblAvgScore.Name = "lblAvgScore";
+            lblAvgScore.Size = new Size(0, 15);
+            lblAvgScore.TabIndex = 19;
+            // 
+            // lblCriticalCount
+            // 
+            lblCriticalCount.AutoSize = true;
+            lblCriticalCount.Location = new Point(405, 587);
+            lblCriticalCount.Name = "lblCriticalCount";
+            lblCriticalCount.Size = new Size(0, 15);
+            lblCriticalCount.TabIndex = 20;
+            // 
+            // lblSeriousCount
+            // 
+            lblSeriousCount.AutoSize = true;
+            lblSeriousCount.Location = new Point(652, 527);
+            lblSeriousCount.Name = "lblSeriousCount";
+            lblSeriousCount.Size = new Size(0, 15);
+            lblSeriousCount.TabIndex = 21;
+            // 
+            // lblStableCount
+            // 
+            lblStableCount.AutoSize = true;
+            lblStableCount.Location = new Point(652, 587);
+            lblStableCount.Name = "lblStableCount";
+            lblStableCount.Size = new Size(0, 15);
+            lblStableCount.TabIndex = 22;
+            // 
+            // lblReleaseReadyCount
+            // 
+            lblReleaseReadyCount.AutoSize = true;
+            lblReleaseReadyCount.Location = new Point(813, 587);
+            lblReleaseReadyCount.Name = "lblReleaseReadyCount";
+            lblReleaseReadyCount.Size = new Size(0, 15);
+            lblReleaseReadyCount.TabIndex = 23;
+            // 
+            // lblRecoveringCount
+            // 
+            lblRecoveringCount.AutoSize = true;
+            lblRecoveringCount.Location = new Point(813, 523);
+            lblRecoveringCount.Name = "lblRecoveringCount";
+            lblRecoveringCount.Size = new Size(0, 15);
+            lblRecoveringCount.TabIndex = 24;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(947, 715);
+            Controls.Add(lblRecoveringCount);
+            Controls.Add(lblReleaseReadyCount);
+            Controls.Add(lblStableCount);
+            Controls.Add(lblSeriousCount);
+            Controls.Add(lblCriticalCount);
+            Controls.Add(lblAvgScore);
+            Controls.Add(lblAvgAge);
+            Controls.Add(lblTotalAnimals);
+            Controls.Add(btnGeneratesum);
             Controls.Add(btnDelete);
             Controls.Add(btnUpdate);
             Controls.Add(txtSearch);
@@ -225,6 +318,7 @@
             Controls.Add(lblId);
             Name = "Form1";
             Text = "Baobab Ridge Wildlife Records";
+            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -248,5 +342,14 @@
         private TextBox txtSearch;
         private Button btnUpdate;
         private Button btnDelete;
+        private Button btnGeneratesum;
+        private Label lblTotalAnimals;
+        private Label lblAvgAge;
+        private Label lblAvgScore;
+        private Label lblCriticalCount;
+        private Label lblSeriousCount;
+        private Label lblStableCount;
+        private Label lblReleaseReadyCount;
+        private Label lblRecoveringCount;
     }
 }
